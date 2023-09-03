@@ -1,116 +1,88 @@
-class Node {
-    int value;
-    Node next;
+import java.util.ArrayList;
+import java.util.List;
 
-    Node(int value) {
-        this.value = value;
-        this.next = null;
+class Task {
+    private int taskId;
+    private String taskName;
+    private String description;
+
+    public Task(int taskId, String taskName, String description) {
+        this.taskId = taskId;
+        this.taskName = taskName;
+        this.description = description;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String toString() {
+        return "Task ID: " + taskId + ", Task Name: " + taskName + ", Description: " + description;
     }
 }
 
-class LinkedList {
-    Node head;
+class TaskManager {
+    private List<Task> taskList;
 
-    void addNode(int value) {
-        Node newNode = new Node(value);
-        newNode.next = head;
-        head = newNode;
+    public TaskManager() {
+        taskList = new ArrayList<>();
     }
 
-    void insertAfter(Node node, int value) {
-        Node newNode = new Node(value);
-        newNode.next = node.next;
-        node.next = newNode;
+    public void addTask(int taskId, String taskName, String description) {
+        Task newTask = new Task(taskId, taskName, description);
+        taskList.add(newTask);
+        System.out.println("Task added successfully.");
     }
 
-    void insertEnd(int value) {
-        Node newNode = new Node(value);
-        if (head == null) {
-            head = newNode;
-        } else {
-            Node current = head;
-            while (current.next != null) {
-                current = current.next;
-            }
-            current.next = newNode;
-        }
-    }
-
-    void insertSorted(int value) {
-        if (head == null || head.value >= value) {
-            addNode(value);
-            return;
-        }
-
-        Node current = head;
-        while (current.next != null) {
-            if (current.next.value >= value) {
-                break;
-            }
-            current = current.next;
-        }
-        insertAfter(current, value);
-    }
-
-    void deleteNode(int value) {
-        if (head == null) {
-            System.out.println("List is empty");
-            return;
-        }
-
-        if (head.value == value) {
-            head = head.next;
-            return;
-        }
-
-        Node current = head;
-        while (current.next != null) {
-            if (current.next.value == value) {
-                current.next = current.next.next;
+    public void deleteTask(int taskId) {
+        for (int i = 0; i < taskList.size(); i++) {
+            Task task = taskList.get(i);
+            if (task.getTaskId() == taskId) {
+                taskList.remove(i);
+                System.out.println("Task deleted successfully.");
                 return;
             }
-            current = current.next;
         }
-
-        System.out.println("Value not found in the list");
+        System.out.println("Task with ID " + taskId + " not found.");
     }
 
-    void reverseList() {
-        Node prev = null;
-        Node current = head;
-
-        while (current != null) {
-            Node nextNode = current.next;
-            current.next = prev;
-            prev = current;
-            current = nextNode;
+    public void viewAllTasks() {
+        if (taskList.isEmpty()) {
+            System.out.println("No tasks found.");
+        } else {
+            System.out.println("Task List:");
+            for (Task task : taskList) {
+                System.out.println(task);
+            }
         }
-
-        head = prev;
-    }
-
-    void printList() {
-        Node current = head;
-        while (current != null) {
-            System.out.print(current.value + " ");
-            current = current.next;
-        }
-        System.out.println();
     }
 }
 
-public class Main {
+public class TaskManagerApp {
     public static void main(String[] args) {
-        LinkedList list = new LinkedList();
+        TaskManager taskManager = new TaskManager();
 
-        // Example list creation with three nodes
-        list.addNode(1);
-        list.addNode(2);
-        list.addNode(3);
+        // Adding tasks
+        taskManager.addTask(1, "Task 1", "Description of Task 1");
+        taskManager.addTask(2, "Task 2", "Description of Task 2");
 
-        // Print the list
-        list.addNode(0);
-        list.insertEnd(5);
-        list.printList();
+        // Deleting a task
+        taskManager.deleteTask(1);
+
+        // Adding another task
+        taskManager.addTask(3, "Task 3", "Description of Task 3");
+
+        // Viewing all tasks
+        taskManager.viewAllTasks();
     }
 }
+
