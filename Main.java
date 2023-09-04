@@ -1,4 +1,4 @@
-class Task {
+class Main {
     private int taskId;
     private String taskName;
     private String description;
