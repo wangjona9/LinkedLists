@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 class Task {
     private int taskId;
     private String taskName;
@@ -24,65 +21,103 @@ class Task {
         return description;
     }
 
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Task ID: " + taskId + ", Task Name: " + taskName + ", Description: " + description;
     }
 }
 
+class Node {
+    Task task;
+    Node next;
+
+    public Node(Task task) {
+        this.task = task;
+        this.next = null;
+    }
+}
+
 class TaskManager {
-    private List<Task> taskList;
+    private Node head;
 
     public TaskManager() {
-        taskList = new ArrayList<>();
+        head = null;
     }
 
     public void addTask(int taskId, String taskName, String description) {
         Task newTask = new Task(taskId, taskName, description);
-        taskList.add(newTask);
+        Node newNode = new Node(newTask);
+        newNode.next = head;
+        head = newNode;
         System.out.println("Task added successfully.");
     }
 
     public void deleteTask(int taskId) {
-        for (int i = 0; i < taskList.size(); i++) {
-            Task task = taskList.get(i);
-            if (task.getTaskId() == taskId) {
-                taskList.remove(i);
+        if (head == null) {
+            System.out.println("Task list is empty.");
+            return;
+        }
+
+        if (head.task.getTaskId() == taskId) {
+            head = head.next;
+            System.out.println("Task deleted successfully.");
+            return;
+        }
+
+        Node current = head;
+        while (current.next != null) {
+            if (current.next.task.getTaskId() == taskId) {
+                current.next = current.next.next;
                 System.out.println("Task deleted successfully.");
                 return;
             }
+            current = current.next;
         }
         System.out.println("Task with ID " + taskId + " not found.");
     }
 
     public void viewAllTasks() {
-        if (taskList.isEmpty()) {
+        if (head == null) {
             System.out.println("No tasks found.");
         } else {
             System.out.println("Task List:");
-            for (Task task : taskList) {
-                System.out.println(task);
+            Node current = head;
+            while (current != null) {
+                System.out.println(current.task);
+                current = current.next;
             }
         }
     }
-}
 
-public class TaskManagerApp {
-    public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
-
-        // Adding tasks
-        taskManager.addTask(1, "Task 1", "Description of Task 1");
-        taskManager.addTask(2, "Task 2", "Description of Task 2");
-
-        // Deleting a task
-        taskManager.deleteTask(1);
-
-        // Adding another task
-        taskManager.addTask(3, "Task 3", "Description of Task 3");
-
-        // Viewing all tasks
-        taskManager.viewAllTasks();
+        public static void main(String[] args) {
+            TaskManager taskManager = new TaskManager();
+    
+            // Adding tasks
+            taskManager.addTask(1, "Task 1", "Description 1");
+            taskManager.addTask(2, "Task 2", "Description 2");
+            taskManager.addTask(3, "Task 3", "Description 3");
+    
+            // Viewing all tasks
+            taskManager.viewAllTasks();
+    
+            // Deleting a task
+            taskManager.deleteTask(2);
+    
+            // Viewing all tasks after deletion
+            taskManager.viewAllTasks();
+        }
     }
-}
+    
 
